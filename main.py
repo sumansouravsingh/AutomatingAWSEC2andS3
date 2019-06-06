@@ -24,55 +24,12 @@ except Exception as err:
 regionName = ""
 client=""
 tries = 0
-'''
-def createUserPolicy(policyArn, userName):
-	response =  client.attach_user_policy(
-		PolicyArn=policyArn,
-		UserName=userName,
-	)
-'''
+
 #Get details from User
 def selectUser():
 	try:
 		global regionName
 		global client 
-		'''x = int(raw_input("Press 1 to create a new user user and use it or 2 to continue with existing user."))
-		if x==1:
-			client = boto.client('iam')
-			path = raw_input("Enter a path")
-			username = raw_input("Select a username")
-			#'arn:aws:iam::251044776254:user/suman999'
-			response = client.create_user(
-		 	   	Path=path,
-		    	UserName=username
-			)
-			createUserPolicy('arn:aws:iam::aws:policy/AdministratorAccess',username)
-			createUserPolicy('arn:aws:iam::aws:policy/AmazonS3FullAccess',username)
-			createUserPolicy('arn:aws:iam::aws:policy/AmazonEC2FullAccess',username)
-			response = client.create_access_key(
- 			   UserName=username
-			)
-			accessKey = response["AccessKey"]["AccessKeyId"]
-			secretKey = response["AccessKey"]["SecretAccessKey"]
-
-			client = boto.client(
-		    	's3',
-		    	aws_access_key_id=accessKey,
-			    aws_secret_access_key=secretKey
-			)
-			
-		elif x==2:
-			client = boto.client('iam')
-			response = client.list_policies(
-			    Scope='AWS',
-			    OnlyAttached=True,
-			    MaxItems=10
-			)
-			for PolicyName in response["Policies"]:
-				print PolicyName["PolicyName"]
-		else:
-			raise InvalidOptionError("Please Enter value as 1 or 2")	
-		'''
 		client = boto.client('iam')
 		response = client.list_policies(
 		    Scope='AWS',
@@ -86,17 +43,17 @@ def selectUser():
 		credentials = credentials.get_frozen_credentials()
 		regionName = session.region_name
 		#Create a password.txt file for s3fs fuse
-		items = os.listdir(".")
-		for names in items:
-			if names=='password.txt':
+		path_names = os.listdir(".")
+		for name in path_names:
+			if name=='password.txt':
 				os.chmod('password.txt',0777)
 				os.chmod('password.txt',0o777)
 		password = open('password.txt','w')
 		password.write(credentials.access_key+':'+credentials.secret_key)
 		#Check if the password file was created successfully
-		items = os.listdir(".")
-		for names in items:
-			if names=='password.txt':
+		path_names = os.listdir(".")
+		for name in path_names:
+			if name=='password.txt':
 				return			
 	except ValueError as err:
 		print err
@@ -118,9 +75,7 @@ def selectUser():
 	except Exception as err:
 		print err
 		sys.exit(0)
-		
 
-	
 #create an instance of EC2
 def createEC2Instance(ec2Instance, subnetId, groupId):
 	global tries
